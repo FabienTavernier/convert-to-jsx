@@ -54,7 +54,13 @@
         });
       } catch (error) {
         console.error('Conversion error → ', error);
-        return 'Something went wrong! Check the console.';
+        return `
+Something went wrong! Check the console.
+\n\n
+Your input:
+===========
+${input}
+        `;
       }
     }
 
