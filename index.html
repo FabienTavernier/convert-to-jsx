@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS to JSX</title>
+  <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+  <header>
+    <h1>Convert `React.createElement` to JSX</h1>
+
+    <button onclick="convert()">Convertir</button>
+  </header>
+
+  <main>
+    <fieldset>
+      <legend>Input</legend>
+
+      <textarea id="input">const myElement = React.createElement('h1', null, 'Hello World!');</textarea>
+    </fieldset>
+    
+    <fieldset>
+      <legend>Output</legend>
+
+      <textarea id="output" readonly></textarea>
+    </fieldset>
+  </main>
+
+  <footer>
+    <p>© 2023 - Fabien for O'clock</p>
+  </footer>
+  
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./plugins/transformReactCreateElementToJSX.js"></script>
+
+  <script src="https://unpkg.com/prettier@3.1.0/standalone.js"></script>
+  <script src="https://unpkg.com/prettier@3.1.0/plugins/babel.js"></script>
+  <script src="https://unpkg.com/prettier@3.1.0/plugins/estree.js"></script>
+
+  <script type="text/babel">
+    async function getOutput(input) {
+      try {
+        const { code } = Babel.transform(
+          input,
+          {
+            plugins: ['transformReactCreateElementToJSX'],
+          },
+        );
+
+        return await prettier.format(code, {
+          parser: 'babel',
+          plugins: prettierPlugins,
+        });
+      } catch (error) {
+        console.error('Conversion error → ', error);
+        return 'Something went wrong! Check the console.';
+      }
+    }
+
+    async function convert() {
+      const input = document.getElementById('input').value;
+      document.getElementById('output').innerHTML = await getOutput(input);
+    }
+
+    function handlePaste() {
+      setTimeout(() => { convert(); }, 100);
+    }
+
+    document.getElementById('input').addEventListener('paste', handlePaste);
+
+    convert();
+  </script>
+</body>
+</html>
