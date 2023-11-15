@@ -65,7 +65,14 @@ ${input}
     }
 
     async function convert() {
-      const input = document.getElementById('input').value;
+      let input = document.getElementById('input').value;
+
+      // Be sure to have `React.createElement()`
+      input = input.replaceAll(
+        /\b(React\.)?createElement\s*\(/g,
+        'React.createElement('
+      );
+
       document.getElementById('output').innerHTML = await getOutput(input);
     }
 
